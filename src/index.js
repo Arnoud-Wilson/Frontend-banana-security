@@ -13,7 +13,7 @@ ReactDOM.render(
               <CustomProvider>
                 <App/>
               </CustomProvider>
-          </Router>
+           </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { Route, Routes } from 'react-router-dom';
+import {Route, Routes, Navigate} from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
@@ -9,17 +9,15 @@ import './App.css';
 import { AuthContext } from "./context/AuthContext";
 
 function App() {
-  const { authenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
-  console.log(authenticated)
-
-  return (
+    return (
     <>
       <NavBar />
       <div className="content">
           <Routes>
             <Route path="/" element={ <Home /> } />
-            <Route path="/profile" element={ authenticated === true ? <Profile /> : <navigate to="/" />} />
+            <Route path="/profile" element={ isAuthenticated === true ? <Profile /> : < Navigate to="/" /> } />
             <Route path="/signin" element={ <SignIn /> } />
             <Route path="/signup" element={ <SignUp /> } />
           </Routes>
