@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import { Link } from 'react-router-dom';
 import {AuthContext} from "../context/AuthContext";
 
@@ -26,14 +26,12 @@ function SignIn() {
           <input
               type="email"
               name="email"
-              // value={isAuthenticated.email}
               onChange={changeHandler}
           />
           <label htmlFor="password">Wachtwoord:</label>
           <input
               type="password"
               name="password"
-              // value={isAuthenticated.password}
               onChange={changeHandler}
           />
         <button>Inloggen</button>

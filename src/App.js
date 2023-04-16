@@ -10,7 +10,6 @@ import { AuthContext } from "./context/AuthContext";
 
 function App() {
   const { isAuth } = useContext(AuthContext);
-  console.log(isAuth)
 
     return (
     <>
