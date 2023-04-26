@@ -8,6 +8,7 @@ function SignUp() {
         email: "",
         password: "",
         username: "",
+        role: "user",
     })
 
     function changeHandler(e) {

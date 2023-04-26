@@ -2,16 +2,16 @@ import React, {createContext, useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import checkIfTokenIsValid from "../helpers/checkIfTokenIsValid";
 
 
 export const AuthContext = createContext({ });
 
 
 function CustomProvider({children}) {
-
+    const localToken = localStorage.getItem("token");
     const navigate = useNavigate();
 
-    const localToken = localStorage.getItem("token");
 
     const [isAuthenticated, setIsAuthenticated] = useState({
         isAuth: false,
@@ -20,9 +20,13 @@ function CustomProvider({children}) {
         password: null,
         token: null,
         id: null,
+        status: "pending",
     });
 
     useEffect(() => {
+
+        console.log("Context wordt gerefresht!")
+
         async function setUser() {
             const decoded = jwtDecode(localToken)
 
@@ -31,19 +35,33 @@ function CustomProvider({children}) {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${localToken}`,
                     }})
-                console.log(userResult.data)
                 setIsAuthenticated({
                     isAuth: true,
                     username: `${userResult.data.username}`,
                     email: `${userResult.data.email}`,
                     id: `${userResult.data.id}`,
+                    status: "done",
                 });
                 navigate("/profile");
             }catch (e){
+                setIsAuthenticated({
+                    status: "done",
+                    isAuth: false,
+                    username: null,
+                    email: null,
+                    id: null,
+                })
                 console.error(e)
             }
         }
-        localToken !== null && setUser()
+        if (localToken !== null && checkIfTokenIsValid(localToken)) {
+            void setUser()
+        }
+        else {
+            setIsAuthenticated({
+                status: "done",
+                isAuth: false,
+        })}
     }, []);
 
 
@@ -56,14 +74,19 @@ function CustomProvider({children}) {
                     password: `${isAuthenticated.password}`,
                 })
                 console.log("Gebruiker is ingelogd!");
+                console.log(loginData)
                 localStorage.setItem("token", `${loginData.data.accessToken}`)
                 setIsAuthenticated({
                     isAuth: true,
                     token: `${loginData.data.accessToken}`,
+                    status: "done",
+                    username: isAuthenticated.username,
+                    email: isAuthenticated.email,
                 })
                 navigate("/profile");
             }catch (e) {
-                console.error(e)
+                setIsAuthenticated({status: "done"});
+                console.error(e);
             }
     }
 
@@ -74,8 +97,8 @@ function CustomProvider({children}) {
             isAuth: false,
             username: null,
             email: null,
-            password: null,
             token: null,
+            status: "done",
         });
         navigate("/");
     }
@@ -86,7 +109,6 @@ function CustomProvider({children}) {
         isAuth: isAuthenticated.isAuth,
         username: isAuthenticated.username,
         email: isAuthenticated.email,
-        password: isAuthenticated.password,
         token: isAuthenticated.token,
         id: isAuthenticated.id,
         loginFunction: login,
@@ -96,7 +118,7 @@ function CustomProvider({children}) {
 
     return (
         <AuthContext.Provider value={auth}>
-            {children}
+            {isAuthenticated.status === "done" ? children : <p>Loading...</p>}
         </AuthContext.Provider>
     );
 }
