@@ -1,14 +1,39 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Link } from 'react-router-dom';
+import {AuthContext} from "../context/AuthContext";
 
 function SignIn() {
+    const { isAuthenticated, setIsAuthenticated, loginFunction } = useContext(AuthContext);
+
+
+    function changeHandler(e) {
+        e.preventDefault();
+        const changedFieldName = e.target.name;
+
+        setIsAuthenticated({
+            ...isAuthenticated,
+            [changedFieldName]: e.target.value,
+        });
+    }
+
   return (
     <>
       <h1>Inloggen</h1>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab alias cum debitis dolor dolore fuga id molestias qui quo unde?</p>
 
-      <form>
-        <p>*invoervelden*</p>
+      <form onSubmit={loginFunction} >
+          <label htmlFor="email">Email adres:</label>
+          <input
+              type="email"
+              name="email"
+              onChange={changeHandler}
+          />
+          <label htmlFor="password">Wachtwoord:</label>
+          <input
+              type="password"
+              name="password"
+              onChange={changeHandler}
+          />
         <button>Inloggen</button>
       </form>
 
