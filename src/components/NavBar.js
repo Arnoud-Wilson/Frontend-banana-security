@@ -19,28 +19,29 @@ function NavBar() {
         </Link>
 
       <div>
-        {isAuth === false ?
-            <>
-            <button
-                type="button"
-                onClick={() => navigate('/signin')}
-            >
-              Log in
-            </button>
-            <button
-                type="button"
-                onClick={() => navigate('/signup')}
-            >
-              Registreren
-            </button>
-            </>
-            :
+        {isAuth ?
             <button
                 type="button"
                 onClick={logoutFunction}
             >
-              Uitloggen
+                Uitloggen
             </button>
+            :
+            <>
+            <button
+            type="button"
+            onClick={() => navigate('/signin')}
+            >
+            Log in
+            </button>
+            <button
+            type="button"
+            onClick={() => navigate('/signup')}
+            >
+            Registreren
+            </button>
+            </>
+
         }
       </div>
     </nav>
